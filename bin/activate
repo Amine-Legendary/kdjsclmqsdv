@@ -1,0 +1,151 @@
+#!/usr/bin/bash
+
+PLATFORM=$(python3 -c "import sys, os, platform;print('win' if sys.platform in ('win32', 'cygwin') else 'macosx' if sys.platform == 'darwin' else 'termux' if os.environ.get('PREFIX') != None else 'ish shell' if platform.release().endswith('ish') else 'linux' if sys.platform.startswith('linux') or sys.platform.startswith('freebsd') else 'unknown')")
+
+function exit() {
+  # reset old environment variables
+  if [ -n "${_OLD_VIRTUAL_PATH:-}" ]; then
+    PATH="${_OLD_VIRTUAL_PATH:-}"
+    export PATH
+    unset _OLD_VIRTUAL_PATH
+  fi
+  if [ -n "${_OLD_VIRTUAL_PYTHONHOME:-}" ]; then
+    PYTHONHOME="${_OLD_VIRTUAL_PYTHONHOME:-}"
+    export PYTHONHOME
+    unset _OLD_VIRTUAL_PYTHONHOME
+  fi
+
+  if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ]; then
+    hash -r 2>/dev/null
+  fi
+
+  if [ -n "${_OLD_VIRTUAL_PS1:-}" ]; then
+    PS1="${_OLD_VIRTUAL_PS1:-}"
+    export PS1
+    unset _OLD_VIRTUAL_PS1
+  fi
+  if [[ $PLATFORM == "termux" ]]; then
+    if [[ $ZSH_VERSION != "" ]]; then
+      ZSH_AUTOSUGGEST_STRATEGY=()
+      ZSH_HIGHLIGHT_MAXLENGTH=0
+    fi
+  elif [[ $PLATFORM == "ish shell" ]];then
+    if [[ $ZSH_VERSION != "" ]]; then
+      ZSH_AUTOSUGGEST_STRATEGY=()
+      ZSH_HIGHLIGHT_MAXLENGTH=0
+    fi
+  fi
+  source "$VIRTUAL_ENV/etc/onexit.sh" &>/dev/null
+  unset VIRTUAL_ENV tiU apVU
+
+  if [ ! "${1:-}" = "nondestructive" ]; then
+    # Self destruct!
+    unset -f exit AmineMode-auto-complete &> /dev/null
+  fi
+  #  exit
+}
+
+function AmineMode-auto-complete() {
+ # History configurations
+  HISTFILE=~/.zsh_history
+  HISTSIZE=1000
+  SAVEHIST=2000
+  setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+  setopt hist_ignore_dups       # ignore duplicated commands history list
+  setopt hist_ignore_space      # ignore commands that start with space
+  setopt hist_verify            # show command with history expansion to user before running it
+  #setopt share_history         # share command history data
+
+  # force zsh to show the complete history
+  alias history="history 0"
+
+  unset ZSH_HIGHLIGHT_MAXLENGTH
+  source "$VIRTUAL_ENV/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source "$VIRTUAL_ENV/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  ZSH_AUTOSUGGEST_STRATEGY=(history)
+}
+
+# unset irrelevant variables
+exit nondestructive
+
+# AmineMode path
+_FILE_SOURCE_PATH=$(realpath "$0")
+if [[ "$_FILE_SOURCE_PATH" =~ .+activate ]]; then
+  VIRTUAL_ENV=${_FILE_SOURCE_PATH%/*/*}
+elif [[ "$_FILE_SOURCE_PATH" =~ .+bash ]]; then
+  _FILE_SOURCE_PATH=$(realpath "$BASH_SOURCE")
+  VIRTUAL_ENV=${_FILE_SOURCE_PATH%/*/*}
+else
+  echo "# can't find AmineMode path!"
+  exit
+fi
+
+VIRTUAL_ENV=${_FILE_SOURCE_PATH%/*/*}
+#if [[ $PLATFORM == "termux" ]]; then
+#  apVU=$($VIRTUAL_ENV/lib/shell apVU) &>/dev/null
+#  tiU=$($VIRTUAL_ENV/lib/shell tiU) &>/dev/null
+#else
+#  apVU="apVU"
+#  tiU="tiU"
+#fi
+
+apVU="apVU"
+tiU="tiU"
+
+export VIRTUAL_ENV
+export tiU
+export apVU
+unset _FILE_SOURCE_PATH
+
+# Add AmineMode path to virtual system path
+_OLD_VIRTUAL_PATH="$PATH"
+
+if [ -d $VIRTUAL_ENV/tools ]; then
+  for bin_folder in $(find $VIRTUAL_ENV/tools/ -name "bin"); do
+    if [[ -d "$bin_folder" ]]; then
+      PATH="$bin_folder:$PATH"
+    fi
+  done
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ]; then
+  PATH="$HOME/bin:$PATH"
+fi
+
+export PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# prompt setting (AmineMode cmd Style) and intro
+
+if [ -f $VIRTUAL_ENV/etc/motd ]; then
+  cat $VIRTUAL_ENV/etc/motd
+fi
+
+if [[ $tiU =~ tiU ]]; then
+  _OLD_VIRTUAL_PS1=$PS1
+  source "$VIRTUAL_ENV/etc/bashrc"
+  source "$VIRTUAL_ENV/etc/AmineMode-fix"
+  export PS1
+else
+  python3 -c "print(*'''$tiU'''.split('#'),sep='#')"
+  exit
+  return
+fi
+
+if ! [[ $apVU =~ apVU ]]; then
+  python3 -c "print(*'''$apVU'''.split('#'),sep='#')"
+  exit
+  return
+fi
+
+if [[ $PLATFORM == "termux" ]]; then
+  AmineMode-auto-complete
+elif [[ $PLATFORM == "ish shell" ]]; then
+  AmineMode-auto-complete
+fi
+# This should detect bash and zsh, which have a hash command that must
+# be called to get it to forget past commands.  Without forgetting
+# past commands the $PATH changes we made may not be respected
+if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ]; then
+  hash -r 2>/dev/null
+fi
