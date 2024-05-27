@@ -1,20 +1,20 @@
 
-function AmineMode() {
+function PSHMode() {
   if [ $1 ]; then
     if [[ $1 == "check" ]]; then
-      $HOME/.AmineMode/bin/AmineMode check
+      $HOME/.PSHMode/bin/PSHMode check
     elif [[ $1 == "update" ]]; then
-      $HOME/.AmineMode/bin/AmineMode update
+      $HOME/.PSHMode/bin/PSHMode update
     elif [[ $1 == "delete" ]]; then
-      $HOME/.AmineMode/bin/AmineMode delete
+      $HOME/.PSHMode/bin/PSHMode delete
     else
-      $HOME/.AmineMode/bin/AmineMode --help
+      $HOME/.PSHMode/bin/PSHMode --help
     fi
   else
     if [ $VIRTUAL_ENV ]; then
-      echo "AmineMode is active."
+      echo "PSHMode is active."
     else
-      source $HOME/.AmineMode/bin/activate
+      source $HOME/.PSHMode/bin/activate
     fi
   fi
 }
