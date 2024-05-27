@@ -1,0 +1,70 @@
+#!/usr/bin/python3
+import os
+import sys
+sys.path.insert(0, os.environ.get("VIRTUAL_ENV") + "/tools/decode")
+
+import marshal
+from rich import print
+from types import CodeType
+from utils.bytecode import get_marshal_bytes_from_bytecode
+
+COPYRIGHTS = [
+    "Py Private",
+    "HackerMode",
+]
+
+
+def get_marshal_data(bytecode: CodeType):
+    return marshal.loads(get_marshal_bytes_from_bytecode(bytecode))
+
+
+def copyright_msg(encode_copyright: str):
+    print(f"# {file}: [green]{encode_copyright}[/green]")
+    exit(0)
+
+def no_copyright_msg():
+    sys.stderr.write(f"# {file}: Unknown\n")
+    exit(1)
+
+def check_hash(content: str):
+    for copyright in COPYRIGHTS:
+        if copyright in content:
+            copyright_msg(copyright)
+
+    try:
+        bytecode = get_marshal_data(compile(content, "string", "exec"))
+        if bytecode.co_consts[0] == "@psh_team":
+            copyright_msg("Py Private")
+
+        try:
+            if bytes(marshal.loads(bytecode.co_consts[0]).co_consts[0]).decode() == "@psh_team":
+                copyright_msg("Py Private")
+        except:
+            pass
+        _copyright = bytes(marshal.loads(bytecode.co_consts[3]).co_consts[0]).decode()
+        if _copyright == "@psh_team":
+            copyright_msg("Py Private")
+
+        _copyright = bytes(marshal.loads(bytecode.co_consts[3]).co_consts).decode()
+        if _copyright == "@psh_team":
+            copyright_msg("Py Private")
+
+        no_copyright_msg()
+
+    except Exception as err:
+        no_copyright_msg()
+
+if __name__ == "__main__":
+    for file in sys.argv[1:]:
+        if not os.path.isfile(file):
+            exit(f"# error:{file} :filename not found!")
+
+        try:
+            with open(file, "r") as f:
+                data = f.read()
+            data = data.replace("Decoded by HackerMode", "")
+            check_hash(data)
+        except UnicodeDecodeError:
+           no_copyright_msg()
+    if len(sys.argv) == 1:
+        print("USAGE:\n  check-hash filename.py")
