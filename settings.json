@@ -1,0 +1,10 @@
+{
+  "actions": {
+    "DEBUG": false
+  },
+  "settings": {
+    "ARABIC_RESHAPER": false,
+    "PROMPT_TEXT": "AmineMode",
+    "LANGUAGE": "ar"
+  }
+}

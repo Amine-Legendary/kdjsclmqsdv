@@ -1,0 +1,20 @@
+
+function AmineMode() {
+  if [ $1 ]; then
+    if [[ $1 == "check" ]]; then
+      $HOME/.AmineMode/bin/AmineMode check
+    elif [[ $1 == "update" ]]; then
+      $HOME/.AmineMode/bin/AmineMode update
+    elif [[ $1 == "delete" ]]; then
+      $HOME/.AmineMode/bin/AmineMode delete
+    else
+      $HOME/.AmineMode/bin/AmineMode --help
+    fi
+  else
+    if [ $VIRTUAL_ENV ]; then
+      echo "AmineMode is active."
+    else
+      source $HOME/.AmineMode/bin/activate
+    fi
+  fi
+}

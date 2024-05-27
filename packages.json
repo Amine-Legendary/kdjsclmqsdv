@@ -1,0 +1,108 @@
+{
+  "PACKAGES": {
+    "pip3": {
+      "termux": [
+        "pip3 install --upgrade pip"
+      ],
+      "linux": [
+        "sudo apt install python3-pip",
+        "pip3 install --upgrade pip"
+      ],
+      "ish shell": [
+        "apk add py3-pip",
+        "pip3 install --upgrade pip"
+      ]
+    },
+    "gcc": {
+      "termux": [
+        "pkg install clang"
+      ],
+      "linux": [
+        "sudo apt install gcc",
+        "sudo apt install pentium-builder"
+      ],
+      "ish shell": [
+        "apk add gcc"
+      ]
+    },
+    "g++": {
+      "termux": [
+        "pkg install clang"
+      ],
+      "linux": [
+        "sudo apt install g++",
+        "sudo apt install pentium-builder"
+      ],
+      "ish shell": [
+        "apk add g++"
+      ]
+    },
+    "nmap": {
+      "termux": [
+        "pkg install nmap"
+      ],
+      "linux": [
+        "sudo apt install nmap"
+      ],
+      "ish shell": [
+        "apk add nmap"
+      ]
+    },
+    "openssl": {
+      "termux": [
+        "pkg install openssl",
+        "pkg install openssl-tool"
+      ],
+      "linux": [
+        "sudo apt install openssl"
+      ],
+      "ish shell": [
+        "apk add openssl"
+      ]
+    },
+    "tree":{
+      "termux": [
+        "pkg install tree"
+      ],
+      "linux": [
+        "sudo apt install tree"
+      ],
+      "ish shell": [
+        "apk add tree"
+      ]
+    },
+    "cmake":{
+      "termux": [
+        "pkg install cmake"
+      ],
+      "linux": [
+        "sudo apt install cmake"
+      ],
+      "ish shell": [
+        "apk add cmake"
+      ]
+    },
+    "make":{
+      "termux": [
+        "pkg install make"
+      ],
+      "linux": [
+        "sudo apt install make"
+      ],
+      "ish shell": [
+        "apk add make"
+      ]
+    }
+  },
+
+  "PYTHON3_MODULES": [
+    "N4Tools",
+    "rich",
+    "python-bidi",
+    "arabic-reshaper",
+    "bs4",
+    "python-nmap",
+    "requests",
+    "getmac"
+  ]
+}
